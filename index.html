@@ -1,35 +1,76 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ism topish o‘yini</title>
-  <style>
-    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; display:flex; height:100vh; align-items:center; justify-content:center; background:#f2f2f7; }
-    .card { background:white; padding:30px; border-radius:16px; box-shadow:0 6px 28px rgba(0,0,0,0.12); width:330px; text-align:center; }
-    input { width:100%; padding:12px; margin-top:14px; border-radius:10px; border:1px solid #ccc; }
-    button { margin-top:12px; padding:10px 20px; border-radius:10px; border:0; background:#4a6cf7; color:white; cursor:pointer; font-weight:600; }
-    .result { margin-top:20px; font-weight:700; color:#222; font-size:18px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini O'yin</title>
+<style>
+body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f0f5; }
+.card { background:white; padding:30px; border-radius:15px; box-shadow:0 6px 25px rgba(0,0,0,0.1); width:350px; text-align:center; }
+input { width:80%; padding:10px; margin:10px 0; border-radius:8px; border:1px solid #ccc; }
+button { padding:10px 20px; border:none; border-radius:8px; background:#4a6cf7; color:white; font-weight:600; cursor:pointer; }
+.result { margin-top:20px; font-weight:700; font-size:18px; color:#222; }
+</style>
 </head>
 <body>
-  <div class="card">
-    <h3>Ismingning bosh harfini yoz men senga turmush o'rtoging va seni ismlaringizni bosh harflarini bilib beraman 👇</h3>
-    <form id="f">
-      <input id="inputBox" placeholder="Masalan: S" autocomplete="off"/>
-      <button type="submit">Top!</button>
-    </form>
-    <div class="result" id="result"></div>
-  </div>
+<div class="card">
+  <h3 id="question">Savol yuklanmoqda...</h3>
+  <input type="text" id="answer" placeholder="Javobni yozing"/>
+  <button id="submitBtn">Tekshirish</button>
+  <div class="result" id="result"></div>
+</div>
 
-  <script>
-    // Doimiy chiqadigan xabar:
-    const finalMessage = "Sizlar juda baxtli bo'lasizlar Sh❤️M";
+<script>
+const questions = [
+  {q: "5 + 1 = ?", a: "6"},
+  {q: "3 + 4 = ?", a: "7"},
+  {q: "2 + 5 = ?", a: "7"},
+  {q: "1 + 9 = ?", a: "10"}
+];
 
-    document.getElementById('f').addEventListener('submit', function(e){
-      e.preventDefault();
-      document.getElementById('result').textContent = finalMessage;
-    });
-  </script>
+const rewards = [
+  "🎉 Siz bugun 100 ball yutdingiz!",
+  "🏆 Siz sehrli medalni oldingiz!",
+  "💎 Siz sirli tosh topdingiz!",
+  "🍀 Bugun sizga omad kulib boqdi!"
+];
+
+let current = 0;
+let step = 1; // 1-savol, 2-ism
+
+function showQuestion() {
+  document.getElementById('question').textContent = questions[current].q;
+  document.getElementById('answer').value = "";
+  document.getElementById('answer').placeholder = "Javobni yozing";
+  document.getElementById('result').textContent = "";
+}
+
+document.getElementById('submitBtn').addEventListener('click', function() {
+  const input = document.getElementById('answer').value.trim();
+  const result = document.getElementById('result');
+
+  if(step === 1) {
+    if(input === questions[current].a) {
+      result.textContent = "To'g'ri topding! Yutug'ingni olish uchun ism kiriting:";
+      document.getElementById('answer').value = "";
+      document.getElementById('answer').placeholder = "Ismni yozing";
+      step = 2;
+    } else {
+      result.textContent = "Xato javob! Qaytadan urinib ko'ring.";
+    }
+  } else if(step === 2) {
+    if(input !== "") {
+      const reward = rewards[Math.floor(Math.random() * rewards.length)];
+      result.textContent = `Yutuqni ${input} oladi! ${reward}`;
+      document.getElementById('answer').style.display = "none";
+      document.getElementById('submitBtn').style.display = "none";
+      document.getElementById('question').textContent = "O'yin tugadi!";
+    }
+  }
+});
+
+// O'yinni boshlash
+showQuestion();
+</script>
 </body>
 </html>
